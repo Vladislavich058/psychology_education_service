@@ -1,5 +1,5 @@
 package com.psychology.dto;
 
-public record AuthDTO(String accessToken, String type, Integer id, String email, String role) {
+public record AuthDTO(String accessToken, String type, Long id, String email, String role) {
 
 }

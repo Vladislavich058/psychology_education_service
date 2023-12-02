@@ -9,6 +9,4 @@ import com.psychology.entity.User;
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.FIELD)
 public interface UserMapper {
 	User toUser(UserDTO userDTO);
-
-	UserDTO toUserDTO(User user);
 }

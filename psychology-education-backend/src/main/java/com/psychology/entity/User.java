@@ -8,6 +8,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.psychology.views.Views;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,23 +28,24 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "users")
+@JsonView({Views.CoursesView.class, Views.RecordsView.class})
 public class User implements UserDetails {
 
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	Long id;
 
 	@Column(nullable = false, unique = true)
-	private String email;
+	String email;
 
 	@JsonIgnore
 	@Column(nullable = false)
-	private String password;
+	String password;
 
 	@Column(nullable = false)
-	private String role;
+	String role;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

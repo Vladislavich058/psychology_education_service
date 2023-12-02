@@ -1,10 +1,10 @@
 package com.psychology.exception;
 
-public class PsychologistAlreadyExists extends Exception {
+public class UserAlreadyExistsException extends Exception {
 
 	private static final long serialVersionUID = -5719924055565042224L;
 
-	public PsychologistAlreadyExists(String mes) {
+	public UserAlreadyExistsException(String mes) {
 		super(mes);
 	}
 }

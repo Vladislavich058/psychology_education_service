@@ -1,13 +1,22 @@
-import { Collapse, IconButton, Navbar } from "@material-tailwind/react";
+import {
+  Collapse,
+  Dialog,
+  DialogBody,
+  IconButton,
+  Navbar,
+} from "@material-tailwind/react";
 import { useAuth } from "Hooks/useAuth";
 import LogoIcon from "Images/logo1.png";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import PersonalInfoForm from "./PersonalInfoForm";
 
 const Header = () => {
   const [openNav, setOpenNav] = useState(false);
   const { authUser, logout } = useAuth();
   const router = useNavigate();
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(!open);
 
   useEffect(() => {
     window.addEventListener(
@@ -17,19 +26,16 @@ const Header = () => {
   }, []);
 
   const adminNavItems = [
-    { label: "Главная", route: "/" },
     { label: "Психологи", route: "/psychologists" },
-    { label: "Специализации", route: "/specializations" },
+    { label: "Курсы", route: "/courses" },
     { label: "Записи", route: "/records" },
-    { label: "Обратный звонок", route: "/calls" },
     { label: "Аналитика", route: "/analitics" },
   ];
 
-  const userNavItems = [
-    { label: "Услуги", route: "#services" },
-    { label: "Специалисты", route: "#psychologists" },
-    { label: "Офисы", route: "#offices" },
-    { label: "Контакты", route: "#contacts" },
+  const psychologistNavItems = [
+    { label: "Курсы", route: "/courses" },
+    { label: "Избранное", route: "/courses/favourites" },
+    { label: "Обучение", route: "/courses/study" },
   ];
 
   const navList = (
@@ -44,8 +50,8 @@ const Header = () => {
               </li>
             </Link>
           ))
-        : authUser && authUser.role === "ROLE_PSYCHOLOGY"
-        ? userNavItems.map(({ label, route }, index) => (
+        : authUser && authUser.role === "ROLE_PSYCHOLOGIST"
+        ? psychologistNavItems.map(({ label, route }, index) => (
             <Link to={route} key={index}>
               <li
                 className={`p-1 transition ease-in-out delay-100 lg:hover:-translate-y-1 lg:hover:scale-110 hover:font-medium cursor-pointer`}
@@ -61,23 +67,37 @@ const Header = () => {
   return (
     <Navbar className="sticky py-5 bg-gradient-to-b from-[#ffc0cb8b] to-white shadow-none border-none bg-opacity-100 top-0 h-max max-w-full rounded-none z-30">
       <div className="flex items-center gap-10">
-        <a href="/">
-          <div className="flex items-center text-black font-cormorant font-semibold">
-            <div className="uppercase">psycho</div>
-            <img src={LogoIcon} alt="logo" className="w-[18px] block" />
-            <div className="uppercase">nalitik</div>
-          </div>
-        </a>
+        <div className="flex items-center text-black font-medium">
+          <div className="uppercase">psycho</div>
+          <img src={LogoIcon} alt="logo" className="w-[18px] block" />
+          <div className="uppercase">nalitik</div>
+        </div>
         <div className="hidden lg:block">{navList}</div>
         {authUser ? (
-          <div
-            className="p-1 transition ease-in-out delay-100 lg:hover:-translate-y-1 lg:hover:scale-110 hover:font-medium cursor-pointer text-red-500 ml-auto hidden lg:block"
-            onClick={() => {
-              logout();
-              router("/");
-            }}
-          >
-            Выйти
+          <div className="w-full justify-end hidden lg:flex">
+            <div className="flex gap-3">
+              {authUser.role !== "ROLE_ADMIN" ? (
+                <div
+                  className="p-1 transition ease-in-out delay-100 lg:hover:-translate-y-1 lg:hover:scale-110 hover:font-medium cursor-pointer text-black ml-auto"
+                  onClick={() => {
+                    setOpen(true);
+                  }}
+                >
+                  Профиль
+                </div>
+              ) : (
+                ""
+              )}
+              <div
+                className="p-1 transition ease-in-out delay-100 lg:hover:-translate-y-1 lg:hover:scale-110 hover:font-medium cursor-pointer text-red-500 ml-auto"
+                onClick={() => {
+                  logout();
+                  router("/");
+                }}
+              >
+                Выйти
+              </div>
+            </div>
           </div>
         ) : (
           ""
@@ -123,19 +143,44 @@ const Header = () => {
       <Collapse open={openNav}>
         {navList}
         {authUser ? (
-          <div
-            className="p-1 transition ease-in-out delay-100 lg:hover:-translate-y-1 lg:hover:scale-110 hover:font-medium cursor-pointer text-red-500 ml-auto"
-            onClick={() => {
-              logout();
-              router("/");
-            }}
-          >
-            Выйти
+          <div className="mt-5 flex flex-col gap-1">
+            {authUser.role !== "ROLE_ADMIN" ? (
+              <div
+                className="p-1 transition ease-in-out delay-100 lg:hover:-translate-y-1 lg:hover:scale-110 hover:font-medium cursor-pointer text-black"
+                onClick={() => setOpen(true)}
+              >
+                Профиль
+              </div>
+            ) : (
+              ""
+            )}
+            <div
+              className="p-1 transition ease-in-out delay-100 lg:hover:-translate-y-1 lg:hover:scale-110 hover:font-medium cursor-pointer text-red-500"
+              onClick={() => {
+                logout();
+                router("/");
+              }}
+            >
+              Выйти
+            </div>
           </div>
         ) : (
           ""
         )}
       </Collapse>
+      <Dialog
+        open={open}
+        handler={handleOpen}
+        animate={{
+          mount: { scale: 1, y: 0 },
+          unmount: { scale: 0.9, y: -100 },
+        }}
+        size="lg"
+      >
+        <DialogBody>
+          <PersonalInfoForm type="edit" />
+        </DialogBody>
+      </Dialog>
     </Navbar>
   );
 };

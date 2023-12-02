@@ -22,8 +22,8 @@ const Login = () => {
     errorOpen: loginErrorOpen,
   } = useFetching(async () => {
     const response = await LoginService.login({ user });
-    login(response);
-    router("/account");
+    login(response.data);
+    router("/courses");
   });
 
   const {
@@ -43,7 +43,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-[85vh] flex py-56 justify-center">
+    <div className="min-h-[85vh] flex py-40 justify-center">
       {isLoginLoading ? (
         <div className="flex justify-center mt-12">
           <Spinner />
