@@ -36,6 +36,7 @@ const Header = () => {
     { label: "Курсы", route: "/courses" },
     { label: "Избранное", route: "/courses/favourites" },
     { label: "Обучение", route: "/courses/study" },
+    { label: "Тестирование", route: "/test" },
   ];
 
   const navList = (

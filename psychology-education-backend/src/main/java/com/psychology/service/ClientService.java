@@ -1,11 +1,13 @@
 package com.psychology.service;
 
+import com.psychology.dto.ReviewDTO;
 import com.psychology.entity.Course;
 import com.psychology.entity.Favourite;
 import com.psychology.entity.Progress;
 import com.psychology.entity.User;
 import com.psychology.exception.NotFoundException;
 import com.psychology.entity.Record;
+import com.psychology.entity.Review;
 import com.psychology.entity.Topic;
 
 public interface ClientService {
@@ -17,6 +19,8 @@ public interface ClientService {
 	Topic getTopicById(Long id) throws NotFoundException;
 	
 	Favourite addFavouriteCourse(Long id, User user) throws NotFoundException;
+	
+	Review addReview(Long id, User user, ReviewDTO reviewDTO) throws NotFoundException;
 	
 	Record addRecord(Long id, User user) throws NotFoundException;
 	

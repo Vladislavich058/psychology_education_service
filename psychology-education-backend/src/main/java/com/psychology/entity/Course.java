@@ -61,6 +61,10 @@ public class Course implements Serializable {
 	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
 	List<Favourite> favourites;
 	
+	@JsonView({Views.RecordsView.class, Views.CoursesView.class})
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+	List<Review> reviews;
+	
 	@JsonView(Views.CoursesView.class)
 	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
 	List<Record> records;

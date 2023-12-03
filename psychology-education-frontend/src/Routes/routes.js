@@ -1,4 +1,6 @@
+import Test from "Components/Test";
 import TopicForm from "Components/TopicForm";
+import Analitics from "Pages/Analitics";
 import CoursePage from "Pages/CoursePage";
 import Courses from "Pages/Courses";
 import Login from "Pages/Login";
@@ -13,6 +15,7 @@ export const adminRoutes = [
   { path: "/psychologists", element: <Psychologists /> },
   { path: "/courses", element: <Courses role="admin" /> },
   { path: "/records", element: <Records /> },
+  { path: "/analitics", element: <Analitics /> },
   { path: "/courses/:id", element: <CoursePage role="admin" /> },
   { path: "/topics/:size/:index/:id", element: <TopicPage role="admin" /> },
   { path: "/topics/add/:courseId", element: <TopicForm /> },
@@ -21,6 +24,7 @@ export const adminRoutes = [
 
 export const psychologistRoutes = [
     { path: "/courses", element: <Courses /> },
+    { path: "/test", element: <Test /> },
     { path: "/courses/favourites", element: <Courses type="favourite" /> },
     { path: "/courses/study", element: <Courses type="study" /> },
     { path: "/courses/:id", element: <CoursePage /> },

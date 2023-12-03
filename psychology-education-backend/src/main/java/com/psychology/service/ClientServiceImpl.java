@@ -6,19 +6,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.psychology.dto.ReviewDTO;
 import com.psychology.entity.Course;
 import com.psychology.entity.Favourite;
 import com.psychology.entity.Progress;
 import com.psychology.entity.Psychologist;
 import com.psychology.entity.Record;
+import com.psychology.entity.Review;
 import com.psychology.entity.Topic;
 import com.psychology.entity.User;
 import com.psychology.exception.NotFoundException;
+import com.psychology.mapper.ReviewMapper;
 import com.psychology.repository.CourseRepository;
 import com.psychology.repository.FavouriteRepository;
 import com.psychology.repository.ProgressRepository;
 import com.psychology.repository.PsychologistRepository;
 import com.psychology.repository.RecordRepository;
+import com.psychology.repository.ReviewRepository;
 import com.psychology.repository.TopicRepository;
 
 import jakarta.transaction.Transactional;
@@ -43,6 +47,12 @@ public class ClientServiceImpl implements ClientService {
 
 	@Autowired
 	ProgressRepository progressRepository;
+
+	@Autowired
+	ReviewRepository reviewRepository;
+
+	@Autowired
+	ReviewMapper reviewMapper;
 
 	@Override
 	public Iterable<Course> getCourses() {
@@ -98,6 +108,19 @@ public class ClientServiceImpl implements ClientService {
 		Topic topic = topicRepository.findById(id)
 				.orElseThrow(() -> new NotFoundException("Topic with id " + id + " not found!"));
 		return progressRepository.save(Progress.builder().topic(topic).psychologist(psychologist).build());
+	}
+
+	@Override
+	public Review addReview(Long id, User user, ReviewDTO reviewDTO) throws NotFoundException {
+		Psychologist psychologist = psychologistRepository.findByUserId(user.getId())
+				.orElseThrow(() -> new NotFoundException("Psychologist with user id " + user.getId() + " not found!"));
+		Course course = courseRepository.findById(id)
+				.orElseThrow(() -> new NotFoundException("Course with id " + id + " not found!"));
+		Review newReview = reviewMapper.toReview(reviewDTO);
+		newReview.setCourse(course);
+		newReview.setPsychologist(psychologist);
+		newReview.setCreateDateTime(LocalDateTime.now());
+		return reviewRepository.save(newReview);
 	}
 
 }

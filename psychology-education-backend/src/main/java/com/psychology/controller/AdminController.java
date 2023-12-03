@@ -1,6 +1,7 @@
 package com.psychology.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.psychology.dto.CourseDTO;
+import com.psychology.dto.ProgressAnaliticDTO;
 import com.psychology.dto.PsychologistDTO;
+import com.psychology.dto.SelectCourseRating;
 import com.psychology.dto.TopicDTO;
 import com.psychology.entity.Course;
 import com.psychology.entity.Psychologist;
@@ -54,28 +57,38 @@ public class AdminController {
 	public Iterable<Record> getRecords() {
 		return adminService.getRecords();
 	}
-	
+
 	@JsonView(Views.RecordsView.class)
 	@GetMapping("/records/activate/{id}")
 	public Record activateRecord(@PathVariable Long id) throws NotFoundException {
 		return adminService.activateRecord(id);
 	}
-	
+
 	@JsonView(Views.RecordsView.class)
 	@GetMapping("/records/block/{id}")
 	public Record blockRecord(@PathVariable Long id) throws NotFoundException {
 		return adminService.blockRecord(id);
 	}
-	
+
 	@JsonView(Views.CoursesView.class)
 	@GetMapping("/courses/{id}")
 	public Course getCourseById(@PathVariable Long id) throws NotFoundException {
 		return adminService.getCourseById(id);
 	}
-	
+
 	@GetMapping("/topics/{id}")
 	public Topic getTopicById(@PathVariable Long id) throws NotFoundException {
 		return adminService.getTopicById(id);
+	}
+
+	@GetMapping("/analitics/psychologist/{id}")
+	public List<ProgressAnaliticDTO> getPsychologistAnalitic(@PathVariable Long id) throws NotFoundException {
+		return adminService.getProgressAnalitic(id);
+	}
+	
+	@GetMapping("/analitics/courses")
+	public List<SelectCourseRating> getCoursesRating() {
+		return adminService.getCoursesRating();
 	}
 
 	@DeleteMapping("/psychologists/{id}")

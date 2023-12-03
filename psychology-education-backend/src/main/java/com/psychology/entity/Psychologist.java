@@ -60,6 +60,10 @@ public class Psychologist implements Serializable {
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "psychologist", cascade = CascadeType.ALL)
+	List<Review> reviews;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "psychologist", cascade = CascadeType.ALL)
 	List<Record> records;
 	
 	@JsonIgnore

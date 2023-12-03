@@ -1,8 +1,11 @@
 package com.psychology.service;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -11,12 +14,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.psychology.dto.CourseDTO;
+import com.psychology.dto.ProgressAnaliticDTO;
 import com.psychology.dto.PsychologistDTO;
+import com.psychology.dto.SelectCourseRating;
+import com.psychology.dto.SelectProgress;
 import com.psychology.dto.TopicDTO;
 import com.psychology.entity.Course;
 import com.psychology.entity.Photo;
+import com.psychology.entity.Progress;
 import com.psychology.entity.Psychologist;
 import com.psychology.entity.Record;
+import com.psychology.entity.Review;
 import com.psychology.entity.Topic;
 import com.psychology.exception.CourseAlreadyExistsException;
 import com.psychology.exception.NotFoundException;
@@ -25,8 +33,10 @@ import com.psychology.mapper.CourseMapper;
 import com.psychology.mapper.PsychologistMapper;
 import com.psychology.mapper.TopicMapper;
 import com.psychology.repository.CourseRepository;
+import com.psychology.repository.ProgressRepository;
 import com.psychology.repository.PsychologistRepository;
 import com.psychology.repository.RecordRepository;
+import com.psychology.repository.ReviewRepository;
 import com.psychology.repository.TopicRepository;
 import com.psychology.repository.UserRepository;
 
@@ -66,6 +76,12 @@ public class AdminServiceImpl implements AdminService {
 
 	@Autowired
 	RecordRepository recordRepository;
+
+	@Autowired
+	ProgressRepository progressRepository;
+
+	@Autowired
+	ReviewRepository reviewRepository;
 
 	@Override
 	public Iterable<Psychologist> getPsychologists() {
@@ -198,6 +214,26 @@ public class AdminServiceImpl implements AdminService {
 				.orElseThrow(() -> new NotFoundException("Record with id " + id + " not found!"));
 		record.setStatus("block");
 		return recordRepository.save(record);
+	}
+
+	@Transactional
+	@Override
+	public List<ProgressAnaliticDTO> getProgressAnalitic(Long id) throws NotFoundException {
+		List<SelectProgress> psychologistProgresses = progressRepository.getProgressByPsychologistId(id);
+		List<ProgressAnaliticDTO> progressAnaliticDTOs = new ArrayList<>();
+		for (SelectProgress selectProgress : psychologistProgresses) {
+			Course course = courseRepository.findById(selectProgress.getCourse()).orElseThrow(
+					() -> new NotFoundException("Course with id " + selectProgress.getCourse() + " not found!"));
+			progressAnaliticDTOs.add(ProgressAnaliticDTO.builder().xValue(course.getName())
+					.yValue(selectProgress.getCount() / (float) course.getTopics().size()).build());
+		}
+
+		return progressAnaliticDTOs;
+	}
+
+	@Override
+	public List<SelectCourseRating> getCoursesRating() {
+		return reviewRepository.getCourseRating();
 	}
 
 }

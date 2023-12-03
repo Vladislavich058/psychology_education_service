@@ -1,17 +1,24 @@
-import { ArrowUturnLeftIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
+import {
+  ArrowUturnLeftIcon,
+  CheckCircleIcon,
+  StarIcon,
+} from "@heroicons/react/24/solid";
 import {
   Alert,
   Button,
   Card,
   CardBody,
+  Rating,
   Spinner,
 } from "@material-tailwind/react";
 import AdminService from "API/AdminService";
 import ClientService from "API/ClientService";
+import ReviewForm from "Components/ReviewFrom";
 import { useAuth } from "Hooks/useAuth";
 import { useFetching } from "Hooks/useFetching";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import getRating from "Utils/getRating";
 
 const CoursePage = ({ role = "" }) => {
   const [course, setCourse] = useState({
@@ -21,6 +28,7 @@ const CoursePage = ({ role = "" }) => {
     description: "",
     topics: [],
     records: [],
+    reviews: [],
   });
   const params = useParams();
   const router = useNavigate();
@@ -150,6 +158,60 @@ const CoursePage = ({ role = "" }) => {
               ) : (
                 ""
               )}
+              <hr className="mt-5 border-black" />
+              {course.reviews.length ? (
+                <div className="flex gap-1 items-center py-2">
+                  <StarIcon className="text-yellow-700 h-7 w-7" />
+                  <div className="text-2xl font-medium">
+                    {getRating({ course })}
+                  </div>
+                </div>
+              ) : (
+                ""
+              )}
+              {role === "" ? (
+                <ReviewForm fetchCourse={fetchCourse} id={course.id} />
+              ) : (
+                ""
+              )}
+              <div className="flex flex-col gap-2 mt-5">
+                {course.reviews.map((review, index) => (
+                  <Card key={index} className="text-black">
+                    <CardBody>
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <div className="text-sm font-medium">
+                            {review.psychologist.name}
+                          </div>
+                          <div className="text-gray-500 text-sm">
+                            {new Date(review.createDateTime).toLocaleDateString(
+                              "en-US",
+                              {
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "numeric",
+                              }
+                            )}
+                            ,{" "}
+                            {new Date(review.createDateTime).toLocaleTimeString(
+                              "en-US",
+                              {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hourCycle: "h24",
+                              }
+                            )}
+                          </div>
+                        </div>
+                        <div>
+                          <Rating value={review.stars} readonly />
+                        </div>
+                      </div>
+                      <div className="mt-5">{review.message}</div>
+                    </CardBody>
+                  </Card>
+                ))}
+              </div>
             </CardBody>
           </Card>
         </div>

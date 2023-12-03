@@ -6,6 +6,7 @@ import PsychologistRow from "./PsychologistRow";
 const PsychologistTable = ({
   psychologists,
   deletePsychologist,
+  getPsychologistAnalitic,
   setFilter,
   filter,
   fetchPsycho,
@@ -76,6 +77,7 @@ const PsychologistTable = ({
                   psychologist={psychologist}
                   classes={classes}
                   deletePsychologist={deletePsychologist}
+                  getPsychologistAnalitic={getPsychologistAnalitic}
                 />
               );
             })}

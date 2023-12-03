@@ -51,4 +51,11 @@ export default class ClientService {
     });
     return response;
   }
+
+  static async addReview(id, { review }) {
+    const response = await axios.put(API_URL + `reviews/${id}`, review, {
+      headers: getAuthHeader(),
+    });
+    return response;
+  }
 }

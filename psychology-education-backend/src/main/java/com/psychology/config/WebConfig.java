@@ -18,6 +18,7 @@ import com.psychology.repository.CourseRepository;
 import com.psychology.repository.PsychologistRepository;
 import com.psychology.repository.TopicRepository;
 import com.psychology.repository.UserRepository;
+import com.psychology.service.AdminService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,6 +40,9 @@ public class WebConfig implements CommandLineRunner {
 
 	@Autowired
 	PasswordEncoder encoder;
+
+	@Autowired
+	AdminService adminService;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -105,7 +109,6 @@ public class WebConfig implements CommandLineRunner {
 							"<p>Каждый ребенок является самостоятельной личностью, психическое состояние которого изучается и регулируется детской психологией. Дети отличаются друг от друга физиологическими и психологическими особенностями. Чтобы дитя развивалось гармонично, важно не пытаться его переделать, важно учитывать темперамент и характер малыша, только с этой позиции подходить к его обучению. Только при соблюдении этих простых условий из малыша вырастет здоровая и гармоничная личность.</p>")
 							.course(course2).build()));
 		}
-
 	}
 
 }

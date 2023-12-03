@@ -1,16 +1,20 @@
 package com.psychology.service;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import com.psychology.dto.CourseDTO;
+import com.psychology.dto.ProgressAnaliticDTO;
 import com.psychology.dto.PsychologistDTO;
+import com.psychology.dto.SelectCourseRating;
 import com.psychology.dto.TopicDTO;
 import com.psychology.entity.Course;
 import com.psychology.entity.Psychologist;
 import com.psychology.entity.Record;
 import com.psychology.entity.Topic;
+import com.psychology.entity.User;
 import com.psychology.exception.CourseAlreadyExistsException;
 import com.psychology.exception.NotFoundException;
 import com.psychology.exception.UserAlreadyExistsException;
@@ -46,4 +50,8 @@ public interface AdminService {
 	Course updateCourse(CourseDTO courseDTO, MultipartFile file) throws CourseAlreadyExistsException, IOException;
 
 	Topic updateTopic(TopicDTO topicDTO, Long id) throws NotFoundException;
+	
+	List<ProgressAnaliticDTO>  getProgressAnalitic(Long id) throws NotFoundException;
+	
+	List<SelectCourseRating> getCoursesRating();
 }

@@ -52,6 +52,20 @@ export default class AdminService {
     return response;
   }
 
+  static async getPsychologistAnalitic(id) {
+    const response = await axios.get(API_URL + `analitics/psychologist/${id}`, {
+      headers: getAuthHeader(),
+    });
+    return response;
+  }
+
+  static async getCoursesRating() {
+    const response = await axios.get(API_URL + `analitics/courses`, {
+      headers: getAuthHeader(),
+    });
+    return response;
+  }
+
   static async deletePsychologist(id) {
     const response = await axios.delete(API_URL + `psychologists/${id}`, {
       headers: getAuthHeader(),

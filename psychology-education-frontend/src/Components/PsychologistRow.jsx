@@ -2,7 +2,7 @@ import { Button, Dialog, DialogBody } from "@material-tailwind/react";
 import React, { useState } from "react";
 import AavatarLogo from "Images/avatar.png";
 
-const PsychologistRow = ({ classes, psychologist, deletePsychologist }) => {
+const PsychologistRow = ({ classes, psychologist, deletePsychologist, getPsychologistAnalitic }) => {
   const [open, setOpen] = useState(false);
   const handleOpenDialog = () => setOpen(!open);
   return (
@@ -27,11 +27,21 @@ const PsychologistRow = ({ classes, psychologist, deletePsychologist }) => {
       <td className={classes}>
         <Button
           variant="outlined"
-          className="rounded-none text-black"
+          className="rounded-none text-black block"
+          fullWidth
           size="sm"
           onClick={() => deletePsychologist(psychologist.id)}
         >
           Удалить
+        </Button>
+        <Button
+          variant="outlined"
+          className="rounded-none text-black block mt-1"
+          size="sm"
+          fullWidth
+          onClick={() => getPsychologistAnalitic(psychologist.id)}
+        >
+          Аналитика
         </Button>
       </td>
       <Dialog
