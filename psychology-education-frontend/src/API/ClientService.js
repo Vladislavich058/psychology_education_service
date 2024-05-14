@@ -18,6 +18,13 @@ export default class ClientService {
         return response;
     }
 
+    static async getStudiedTopics(id) {
+        const response = await axios.get(API_URL + `courses/studiedTopics/${id}`, {
+            headers: getAuthHeader(),
+        });
+        return response;
+    }
+
     static async getTopicById(id) {
         const response = await axios.get(API_URL + `topics/${id}`, {
             headers: getAuthHeader(),
@@ -56,6 +63,14 @@ export default class ClientService {
     static async addReview(id, {review}) {
         const response = await axios.put(API_URL + `reviews/${id}`, review, {
             headers: getAuthHeader(),
+        });
+        return response;
+    }
+
+    static async getCertificate(id) {
+        const response = await axios.get(API_URL + `courses/certificate/${id}`, {
+            headers: getAuthHeader(),
+            responseType: 'arraybuffer'
         });
         return response;
     }

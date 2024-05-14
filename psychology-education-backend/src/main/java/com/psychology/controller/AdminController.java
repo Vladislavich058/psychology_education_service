@@ -52,6 +52,12 @@ public class AdminController {
 		return adminService.getCourses();
 	}
 
+	@JsonView(Views.CoursesView.class)
+	@GetMapping("/courses/{id}")
+	public Course getCourseById(@PathVariable Long id) throws NotFoundException {
+		return adminService.getCourseById(id);
+	}
+
 	@JsonView(Views.RecordsView.class)
 	@GetMapping("/records")
 	public Iterable<Record> getRecords() {
@@ -68,12 +74,6 @@ public class AdminController {
 	@GetMapping("/records/block/{id}")
 	public Record blockRecord(@PathVariable Long id) throws NotFoundException {
 		return adminService.blockRecord(id);
-	}
-
-	@JsonView(Views.CoursesView.class)
-	@GetMapping("/courses/{id}")
-	public Course getCourseById(@PathVariable Long id) throws NotFoundException {
-		return adminService.getCourseById(id);
 	}
 
 	@GetMapping("/topics/{id}")

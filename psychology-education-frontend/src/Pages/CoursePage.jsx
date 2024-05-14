@@ -8,6 +8,7 @@ import {useFetching} from "Hooks/useFetching";
 import React, {useEffect, useState} from "react";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import getRating from "Utils/getRating";
+import {generateDownloadLink} from "../Utils/generateDownloadLink";
 
 const CoursePage = ({role = ""}) => {
     const [course, setCourse] = useState({
@@ -19,6 +20,7 @@ const CoursePage = ({role = ""}) => {
         records: [],
         reviews: [],
     });
+    const [studiedTopics, setStudiedTopics] = useState([])
     const params = useParams();
     const router = useNavigate();
     const {authUser} = useAuth();
@@ -39,6 +41,18 @@ const CoursePage = ({role = ""}) => {
         setCourse(response.data);
     });
 
+    const {
+        fetching: fetchStudiedTopics,
+        isLoading: isStudiedTopicsLoading,
+        error: studiedTopicsError,
+        errorOpen: studiedTopicsOpen,
+    } = useFetching(async () => {
+        if (role === '') {
+            const response = await ClientService.getStudiedTopics(params.id)
+            setStudiedTopics(response.data)
+        }
+    });
+
     const addRecord = async (id) => {
         try {
             await ClientService.addRecord(id);
@@ -53,23 +67,40 @@ const CoursePage = ({role = ""}) => {
         }
     };
 
+    const getCertificate = async (id) => {
+        try {
+            const response = await ClientService.getCertificate(id);
+            generateDownloadLink(`Certificate_${authUser.id}`, "pdf", response.data)
+        } catch (e) {
+            setErrorOpen(true);
+            const errorMes =
+                (e.response && e.response.data && e.response.data.message) ||
+                e.message ||
+                e.toString();
+            setError(errorMes);
+        }
+    };
+
+    const isStudied = course.topics.every(topic => studiedTopics?.map(topic => topic.id).includes(topic.id))
+
     const studyCourse = course?.records.filter(
         (record) => record.psychologist?.user.id === authUser.id
     )[0];
 
     useEffect(() => {
         fetchCourse();
+        fetchStudiedTopics();
     }, []);
 
     return (
         <div className="py-10">
             <Alert
                 className="my-1 mt-5 rounded-none font-medium text-xl bg-red-100 text-red-500"
-                open={open || errorOpen}
+                open={open || errorOpen || studiedTopicsOpen}
             >
-                {courseError || error}
+                {courseError || error || studiedTopicsError}
             </Alert>
-            {isCourseLoading ? (
+            {isCourseLoading || isStudiedTopicsLoading ? (
                 <div className="flex justify-center mt-12">
                     <Spinner/>
                 </div>
@@ -147,22 +178,29 @@ const CoursePage = ({role = ""}) => {
                             ) : (
                                 ""
                             )}
+                            {role === "" && isStudied && !!studiedTopics.length &&
+                                <Button
+                                    variant="filled"
+                                    size="sm"
+                                    className="mt-6 rounded-none"
+                                    onClick={() => {
+                                        getCertificate(params.id)
+                                    }}
+                                >
+                                    Получить сертификат
+                                </Button>}
                             <hr className="mt-5 border-black"/>
-                            {course.reviews.length ? (
+                            {!!course.reviews.length &&
                                 <div className="flex gap-1 items-center py-2">
                                     <StarIcon className="text-yellow-700 h-7 w-7"/>
                                     <div className="text-2xl font-medium">
                                         {getRating({course})}
                                     </div>
                                 </div>
-                            ) : (
-                                ""
-                            )}
-                            {role === "" ? (
+                            }
+                            {role === "" &&
                                 <ReviewForm fetchCourse={fetchCourse} id={course.id}/>
-                            ) : (
-                                ""
-                            )}
+                            }
                             <div className="flex flex-col gap-2 mt-5">
                                 {course.reviews.map((review, index) => (
                                     <Card key={index} className="text-black">

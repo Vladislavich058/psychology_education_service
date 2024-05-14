@@ -1,6 +1,7 @@
 package com.psychology.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -41,4 +42,6 @@ public class Progress implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "topic_id", nullable = false)
 	Topic topic;
+
+	LocalDateTime dateTime;
 }
