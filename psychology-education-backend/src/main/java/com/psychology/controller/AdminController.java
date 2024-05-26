@@ -4,6 +4,11 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -38,99 +43,107 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/admin")
 public class AdminController {
 
-	@Autowired
-	AdminService adminService;
+    @Autowired
+    AdminService adminService;
 
-	@GetMapping("/psychologists")
-	public Iterable<Psychologist> getPsychologists() {
-		return adminService.getPsychologists();
-	}
+    @GetMapping("/psychologists")
+    public Iterable<Psychologist> getPsychologists() {
+        return adminService.getPsychologists();
+    }
 
-	@JsonView(Views.CoursesView.class)
-	@GetMapping("/courses")
-	public Iterable<Course> getCourses() {
-		return adminService.getCourses();
-	}
+    @JsonView(Views.CoursesView.class)
+    @GetMapping("/courses")
+    public Iterable<Course> getCourses() {
+        return adminService.getCourses();
+    }
 
-	@JsonView(Views.CoursesView.class)
-	@GetMapping("/courses/{id}")
-	public Course getCourseById(@PathVariable Long id) throws NotFoundException {
-		return adminService.getCourseById(id);
-	}
+    @JsonView(Views.CoursesView.class)
+    @GetMapping("/courses/{id}")
+    public Course getCourseById(@PathVariable Long id) throws NotFoundException {
+        return adminService.getCourseById(id);
+    }
 
-	@JsonView(Views.RecordsView.class)
-	@GetMapping("/records")
-	public Iterable<Record> getRecords() {
-		return adminService.getRecords();
-	}
+    @JsonView(Views.RecordsView.class)
+    @GetMapping("/records")
+    public Iterable<Record> getRecords() {
+        return adminService.getRecords();
+    }
 
-	@JsonView(Views.RecordsView.class)
-	@GetMapping("/records/activate/{id}")
-	public Record activateRecord(@PathVariable Long id) throws NotFoundException {
-		return adminService.activateRecord(id);
-	}
+    @JsonView(Views.RecordsView.class)
+    @GetMapping("/records/activate/{id}")
+    public Record activateRecord(@PathVariable Long id) throws NotFoundException {
+        return adminService.activateRecord(id);
+    }
 
-	@JsonView(Views.RecordsView.class)
-	@GetMapping("/records/block/{id}")
-	public Record blockRecord(@PathVariable Long id) throws NotFoundException {
-		return adminService.blockRecord(id);
-	}
+    @JsonView(Views.RecordsView.class)
+    @GetMapping("/records/block/{id}")
+    public Record blockRecord(@PathVariable Long id) throws NotFoundException {
+        return adminService.blockRecord(id);
+    }
 
-	@GetMapping("/topics/{id}")
-	public Topic getTopicById(@PathVariable Long id) throws NotFoundException {
-		return adminService.getTopicById(id);
-	}
+    @GetMapping("/topics/{id}")
+    public Topic getTopicById(@PathVariable Long id) throws NotFoundException {
+        return adminService.getTopicById(id);
+    }
 
-	@GetMapping("/analitics/psychologist/{id}")
-	public List<ProgressAnaliticDTO> getPsychologistAnalitic(@PathVariable Long id) throws NotFoundException {
-		return adminService.getProgressAnalitic(id);
-	}
-	
-	@GetMapping("/analitics/courses")
-	public List<SelectCourseRating> getCoursesRating() {
-		return adminService.getCoursesRating();
-	}
+    @GetMapping("/analitics/psychologist/{id}")
+    public List<ProgressAnaliticDTO> getPsychologistAnalitic(@PathVariable Long id) throws NotFoundException {
+        return adminService.getProgressAnalitic(id);
+    }
 
-	@DeleteMapping("/psychologists/{id}")
-	public Long deletePsychologist(@PathVariable Long id) throws NotFoundException {
-		return adminService.deletePsychologist(id);
-	}
+    @GetMapping("/analitics/courses")
+    public List<SelectCourseRating> getCoursesRating() {
+        return adminService.getCoursesRating();
+    }
 
-	@DeleteMapping("/courses/{id}")
-	public Long deleteCourse(@PathVariable Long id) throws NotFoundException {
-		return adminService.deleteCourse(id);
-	}
+    @DeleteMapping("/psychologists/{id}")
+    public Long deletePsychologist(@PathVariable Long id) throws NotFoundException {
+        return adminService.deletePsychologist(id);
+    }
 
-	@DeleteMapping("/topics/{id}")
-	public Long deleteTopic(@PathVariable Long id) throws NotFoundException {
-		return adminService.deleteTopic(id);
-	}
+    @DeleteMapping("/courses/{id}")
+    public Long deleteCourse(@PathVariable Long id) throws NotFoundException {
+        return adminService.deleteCourse(id);
+    }
 
-	@PostMapping("/psychologists")
-	public Psychologist addPsychologist(@RequestPart("psychologist") @Valid PsychologistDTO psychologistDTO,
-			@RequestPart("photo") MultipartFile photo) throws UserAlreadyExistsException, IOException {
-		return adminService.addPsychologist(psychologistDTO, photo);
-	}
+    @DeleteMapping("/topics/{id}")
+    public Long deleteTopic(@PathVariable Long id) throws NotFoundException {
+        return adminService.deleteTopic(id);
+    }
 
-	@PostMapping("/courses")
-	public Course addCourse(@RequestPart("course") @Valid CourseDTO courseDTO,
-			@RequestPart("photo") MultipartFile photo) throws CourseAlreadyExistsException, IOException {
-		return adminService.addCourse(courseDTO, photo);
-	}
+    @PostMapping("/psychologists")
+    public Psychologist addPsychologist(@RequestPart("psychologist") @Valid PsychologistDTO psychologistDTO,
+                                        @RequestPart("photo") MultipartFile photo) throws UserAlreadyExistsException, IOException {
+        return adminService.addPsychologist(psychologistDTO, photo);
+    }
 
-	@PutMapping("/topics/{id}")
-	public Course addTopic(@PathVariable Long id, @Valid @RequestBody TopicDTO topicDTO) throws NotFoundException {
-		return adminService.addTopic(id, topicDTO);
-	}
+    @PostMapping("/courses")
+    public Course addCourse(@RequestPart("course") @Valid CourseDTO courseDTO,
+                            @RequestPart("photo") MultipartFile photo) throws CourseAlreadyExistsException, IOException {
+        return adminService.addCourse(courseDTO, photo);
+    }
 
-	@PatchMapping("/courses")
-	public Course updateCourse(@RequestPart("course") @Valid CourseDTO courseDTO,
-			@RequestPart("photo") MultipartFile photo) throws CourseAlreadyExistsException, IOException {
-		return adminService.updateCourse(courseDTO, photo);
-	}
+    @PutMapping("/topics/{id}")
+    public Course addTopic(@PathVariable Long id, @Valid @RequestBody TopicDTO topicDTO) throws NotFoundException {
+        return adminService.addTopic(id, topicDTO);
+    }
 
-	@PatchMapping("/topics/{id}")
-	public Topic updateTopic(@Valid @RequestBody TopicDTO topicDTO, @PathVariable Long id) throws NotFoundException {
-		return adminService.updateTopic(topicDTO, id);
-	}
+    @PatchMapping("/courses")
+    public Course updateCourse(@RequestPart("course") @Valid CourseDTO courseDTO,
+                               @RequestPart("photo") MultipartFile photo) throws CourseAlreadyExistsException, IOException {
+        return adminService.updateCourse(courseDTO, photo);
+    }
+
+    @PatchMapping("/topics/{id}")
+    public Topic updateTopic(@Valid @RequestBody TopicDTO topicDTO, @PathVariable Long id) throws NotFoundException {
+        return adminService.updateTopic(topicDTO, id);
+    }
+
+    @GetMapping("/report/{id}")
+    public ResponseEntity<Resource> getProgressReport(@PathVariable Long id) throws NotFoundException, IOException {
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment().filename("ProgressReport_" + id + ".pdf").build().toString())
+                .contentType(MediaType.parseMediaType("application/pdf"))
+                .body(adminService.getProgressReport(id));
+    }
 }
