@@ -5,8 +5,6 @@ import {Chart, registerables} from "chart.js";
 Chart.register(...registerables);
 
 const MyChart = ({xValues, yValues, label, xTitle, yTitle, maxTips}) => {
-    console.log(xValues)
-    console.log(yValues)
     const data = {
         labels: xValues,
         datasets: [

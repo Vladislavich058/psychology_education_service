@@ -29,9 +29,9 @@ const Login = () => {
     const {
         register,
         handleSubmit,
-        formState: {errors, isValid},
+        formState: {errors},
     } = useForm({
-        mode: "onBlur",
+        mode: "onChange",
     });
 
     const handleLogin = async () => {
@@ -106,7 +106,6 @@ const Login = () => {
                             className="rounded-none mt-10 text-black text-base py-2"
                             fullWidth
                             type="submit"
-                            disabled={!isValid}
                         >
                             Вход
                         </Button>

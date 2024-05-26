@@ -56,7 +56,6 @@ const CourseForm = ({type = "", fetchCourses = null, id = null}) => {
         errorOpen: courseErrorOpen,
     } = useFetching(async () => {
         const response = await AdminService.getCourseById(id);
-        console.log(response.data);
         setCourse(response.data);
         reset();
     });

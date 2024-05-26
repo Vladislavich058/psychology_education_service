@@ -10,6 +10,7 @@ const PsychologistTable = ({
                                setFilter,
                                filter,
                                fetchPsycho,
+                               setSelectedPsychologistId
                            }) => {
     const TABLE_HEAD = [
         "Фото",
@@ -78,6 +79,7 @@ const PsychologistTable = ({
                                 classes={classes}
                                 deletePsychologist={deletePsychologist}
                                 getPsychologistAnalitic={getPsychologistAnalitic}
+                                setSelectedPsychologistId={setSelectedPsychologistId}
                             />
                         );
                     })}

@@ -1,10 +1,11 @@
-import {Alert, Dialog, DialogBody, Spinner} from "@material-tailwind/react";
+import {Alert, Button, Dialog, DialogBody, DialogFooter, Spinner} from "@material-tailwind/react";
 import AdminService from "API/AdminService";
 import MyChart from "Components/MyChart";
 import PsychologistTable from "Components/PsychologistTable";
 import {useFetching} from "Hooks/useFetching";
 import {usePsychologists} from "Hooks/usePsychologists";
 import React, {useEffect, useState} from "react";
+import {generateDownloadLink} from "../Utils/generateDownloadLink";
 
 const Psychologists = () => {
     const [psychologists, setPsychologists] = useState([]);
@@ -27,6 +28,7 @@ const Psychologists = () => {
         psychologists,
         filter.query
     );
+    const [selectedPsychologistId, setSelectedPsychologistId] = useState();
 
     const {
         fetching: fetchPsycho,
@@ -74,6 +76,20 @@ const Psychologists = () => {
         }
     };
 
+    const getProgressReport = async (id) => {
+        try {
+            const response = await AdminService.getProgressReport(id);
+            generateDownloadLink(`ProgressReport_${id}`, "pdf", response.data)
+        } catch (e) {
+            setErrorOpen(true);
+            const errorMes =
+                (e.response && e.response.data && e.response.data.message) ||
+                e.message ||
+                e.toString();
+            setError(errorMes);
+        }
+    };
+
     useEffect(() => {
         fetchPsycho();
     }, []);
@@ -98,6 +114,7 @@ const Psychologists = () => {
                     setFilter={setFilter}
                     filter={filter}
                     fetchPsycho={fetchPsycho}
+                    setSelectedPsychologistId={setSelectedPsychologistId}
                 />
             )}
             <Dialog
@@ -118,6 +135,16 @@ const Psychologists = () => {
                         yTitle={"Прогресс %"}
                         maxTips={100}
                     />
+                    {xValues.length && yValues.length &&
+                        <DialogFooter className="flex justify-center">
+                            <Button
+                                variant="filled"
+                                className="rounded-none text-sm"
+                                onClick={() => getProgressReport(selectedPsychologistId)}
+                            >
+                                Получить отчет
+                            </Button>
+                        </DialogFooter>}
                 </DialogBody>
             </Dialog>
         </div>

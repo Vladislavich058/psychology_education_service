@@ -1,10 +1,25 @@
 import {Button, Dialog, DialogBody} from "@material-tailwind/react";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import AavatarLogo from "Images/avatar.png";
 
-const PsychologistRow = ({classes, psychologist, deletePsychologist, getPsychologistAnalitic}) => {
+const PsychologistRow = ({
+                             classes,
+                             psychologist,
+                             deletePsychologist,
+                             getPsychologistAnalitic,
+                             setSelectedPsychologistId
+                         }) => {
     const [open, setOpen] = useState(false);
     const handleOpenDialog = () => setOpen(!open);
+    const handleOpenAnalytic = (id) => {
+        setSelectedPsychologistId(id);
+        getPsychologistAnalitic(id)
+    }
+    useEffect(() => {
+        return () => {
+            setSelectedPsychologistId(null);
+        }
+    }, []);
     return (
         <tr>
             <td className={classes}>
@@ -39,7 +54,7 @@ const PsychologistRow = ({classes, psychologist, deletePsychologist, getPsycholo
                     className="rounded-none text-black block mt-1"
                     size="sm"
                     fullWidth
-                    onClick={() => getPsychologistAnalitic(psychologist.id)}
+                    onClick={() => handleOpenAnalytic(psychologist.id)}
                 >
                     Аналитика
                 </Button>

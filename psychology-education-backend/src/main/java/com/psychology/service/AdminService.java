@@ -3,6 +3,7 @@ package com.psychology.service;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.psychology.dto.CourseDTO;
@@ -54,4 +55,6 @@ public interface AdminService {
 	List<ProgressAnaliticDTO>  getProgressAnalitic(Long id) throws NotFoundException;
 	
 	List<SelectCourseRating> getCoursesRating();
+
+	Resource getProgressReport(Long id) throws NotFoundException, IOException;
 }

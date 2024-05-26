@@ -122,4 +122,12 @@ export default class AdminService {
         });
         return response;
     }
+
+    static async getProgressReport(id) {
+        const response = await axios.get(API_URL + `report/${id}`, {
+            headers: getAuthHeader(),
+            responseType: 'arraybuffer'
+        });
+        return response;
+    }
 }
